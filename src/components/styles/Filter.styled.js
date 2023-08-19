@@ -5,7 +5,8 @@ export const FilterInput = styled.input`
   font-size: 20px;
   border: 2px solid #ccc;
   border-radius: 4px;
-  min-width: 160px;
+  min-width: 360px;
+  min-height: 50px;
   width: 100%;
   outline-color: #ccb912;
 `;
