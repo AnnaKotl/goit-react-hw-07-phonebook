@@ -12,43 +12,52 @@ import { PageContainer, Heading, Section, SubHeading } from './components/styles
 class App extends Component {
   state = {
     contacts: [
-      { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
-      { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
-      { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
-      { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
+      { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56', isDeleted: false },
+      { id: nanoid(), name: 'Hermione Kline', number: '443-89-12', isDeleted: false },
+      { id: nanoid(), name: 'Eden Clements', number: '645-17-79', isDeleted: false },
+      { id: nanoid(), name: 'Annie Copeland', number: '227-91-26', isDeleted: false },
     ],
     filter: '',
   };
 
-  addContact = (name, number) => {
-    const { contacts } = this.state;
-
-    const existingContact = contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
-
-    if (existingContact) {
-      toast.error(`${name} is already in contacts`);
-      return;
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      this.setState({ contacts: JSON.parse(savedContacts) });
     }
+  }
 
+  componentDidUpdate(_, prevState) {
+    const { contacts } = this.state;
+    if (prevState.contacts !== contacts) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+  }
+
+  addContact = (name, number) => {
     const newContact = {
       id: nanoid(),
       name,
       number,
+      isDeleted: false, // Додаємо позначку
     };
-
     this.setState(prevState => ({ contacts: [...prevState.contacts, newContact] }));
   };
 
   deleteContact = id => {
     this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
+      contacts: prevState.contacts.map(contact =>
+        contact.id === id ? { ...contact, isDeleted: true } : contact
+      ),
     }));
-  };
+  }
 
   render() {
     const { contacts, filter } = this.state;
 
-    const filteredContacts = contacts.filter(contact =>
+    const activeContacts = contacts.filter(contact => !contact.isDeleted);
+
+    const filteredContacts = activeContacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
 
