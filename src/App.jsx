@@ -22,7 +22,6 @@ class App extends Component {
     }
   }
 
-
   componentDidUpdate(_, prevState) {
     const { contacts } = this.state;
     if (prevState.contacts !== contacts) {
@@ -50,9 +49,7 @@ class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
-
     const activeContacts = contacts.filter(contact => !contact.isDeleted);
-
     const filteredContacts = activeContacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
