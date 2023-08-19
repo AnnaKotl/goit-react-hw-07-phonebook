@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GlobalStyle } from './components/styles/GlobalStyle';
 import { Layout } from './components/styles/Layout';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { nanoid } from 'nanoid';
 
 import { ContactForm } from './components/ContactForm';
@@ -39,7 +39,7 @@ class App extends Component {
       id: nanoid(),
       name,
       number,
-      isDeleted: false, // Додаємо позначку
+      isDeleted: false,
     };
     this.setState(prevState => ({ contacts: [...prevState.contacts, newContact] }));
   };
