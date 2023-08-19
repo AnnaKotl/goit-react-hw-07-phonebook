@@ -6,12 +6,12 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     width: 100%;
     margin: 0;
-    font-family: 'PT Serif', serif;
+    font-family: 'Raleway', sans-serif;
     font-size: 24px;
     font-style: normal;
     line-height: 1.5;
-    color: #210a01;
-    background-image: linear-gradient(180deg, #ffff7c 0, #ffff6f 12.5%, #fff565 25%, #ffda5c 37.5%, #f2bd53 50%, #dda14c 62.5%, #c98a46 75%, #b77642 87.5%, #a8663f 100%);
+    color: #2e2304;
+    background: #ffd83b;
 }
 
     code {
