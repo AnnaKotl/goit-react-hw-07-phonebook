@@ -8,6 +8,7 @@ import { ContactForm } from './components/ContactForm';
 import { ContactList } from './components/ContactList';
 import { Filter } from './components/Filter';
 import { PageContainer, Heading, Section, SubHeading } from './components/styles/App.styled';
+import { EmptyContactsMessage } from './components/EmptyContactsMessage';
 
 class App extends Component {
   state = {
@@ -62,8 +63,8 @@ class App extends Component {
           <ContactForm onSubmit={this.addContact} />
           <Section>
             <SubHeading>Contacts</SubHeading>
-            <Filter value={filter} onChange={e => this.setState({ filter: e.target.value })} />
-            <ContactList contacts={filteredContacts} onDeleteContact={this.deleteContact} />
+            {filteredContacts.length > 0 && <Filter value={filter} onChange={e => this.setState({ filter: e.target.value })} />}
+            {filteredContacts.length === 0 ? <EmptyContactsMessage /> : <ContactList contacts={filteredContacts} onDeleteContact={this.deleteContact} />}
           </Section>
         </Layout>
         <Toaster position="top-right" />

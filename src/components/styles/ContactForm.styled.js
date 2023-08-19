@@ -12,7 +12,8 @@ export const Label = styled.label`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
-  min-width: 160px;
+  min-width: 360px;
+  min-height: 50px;
   width: 100%;
 `;
 
@@ -21,7 +22,8 @@ export const Input = styled.input`
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  min-width: 160px;
+  min-width: 360px;
+  min-height: 50px;
   width: 100%;
   outline-color: #ccb912;
 `;
