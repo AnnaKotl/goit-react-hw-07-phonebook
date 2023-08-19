@@ -11,24 +11,14 @@ import { PageContainer, Heading, Section, SubHeading } from './components/styles
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56', isDeleted: false },
-      { id: nanoid(), name: 'Hermione Kline', number: '443-89-12', isDeleted: false },
-      { id: nanoid(), name: 'Eden Clements', number: '645-17-79', isDeleted: false },
-      { id: nanoid(), name: 'Annie Copeland', number: '227-91-26', isDeleted: false },
-    ],
+    contacts: [],
     filter: '',
   };
 
   componentDidMount() {
     const savedContacts = localStorage.getItem('contacts');
     if (savedContacts) {
-      const parsedContacts = JSON.parse(savedContacts);
-      const updatedContacts = parsedContacts.map(contact => ({
-        ...contact,
-        isDeleted: false,
-      }));
-      this.setState({ contacts: updatedContacts });
+      this.setState({ contacts: JSON.parse(savedContacts) });
     }
   }
 
