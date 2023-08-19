@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GlobalStyle } from './components/styles/GlobalStyle';
 import { Layout } from './components/styles/Layout';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { nanoid } from 'nanoid';
 
 import { ContactForm } from './components/ContactForm';
@@ -14,6 +14,7 @@ class App extends Component {
   state = {
     contacts: [],
     filter: '',
+    isEmptyContacts: false,
   };
 
   componentDidMount() {
@@ -24,7 +25,14 @@ class App extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    const { contacts } = this.state;
+    const { contacts, isEmptyContacts } = this.state;
+
+    if (prevState.isEmptyContacts !== isEmptyContacts) {
+      if (isEmptyContacts) {
+        toast.error('No contacts found.');
+      }
+    }
+
     if (prevState.contacts !== contacts) {
       localStorage.setItem('contacts', JSON.stringify(contacts));
     }
@@ -48,8 +56,20 @@ class App extends Component {
     }));
   }
 
+  handleFilterChange = e => {
+    const filterValue = e.target.value;
+    this.setState({ filter: filterValue });
+
+    const activeContacts = this.state.contacts.filter(contact => !contact.isDeleted);
+    const filteredContacts = activeContacts.filter(contact =>
+      contact.name.toLowerCase().includes(filterValue.toLowerCase())
+    );
+
+    this.setState({ isEmptyContacts: filteredContacts.length === 0 });
+  };
+
   render() {
-    const { contacts, filter } = this.state;
+    const { contacts, filter, isEmptyContacts } = this.state;
     const activeContacts = contacts.filter(contact => !contact.isDeleted);
     const filteredContacts = activeContacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
@@ -63,8 +83,12 @@ class App extends Component {
           <ContactForm onSubmit={this.addContact} />
           <Section>
             <SubHeading>Contacts</SubHeading>
-            {filteredContacts.length > 0 && <Filter value={filter} onChange={e => this.setState({ filter: e.target.value })} />}
-            {filteredContacts.length === 0 ? <EmptyContactsMessage /> : <ContactList contacts={filteredContacts} onDeleteContact={this.deleteContact} />}
+            <Filter value={filter} onChange={this.handleFilterChange} />
+            {isEmptyContacts ? (
+              <EmptyContactsMessage />
+            ) : (
+              <ContactList contacts={filteredContacts} onDeleteContact={this.deleteContact} />
+            )}
           </Section>
         </Layout>
         <Toaster position="top-right" />
