@@ -10,7 +10,7 @@ import { Filter } from './components/Filter';
 import { PageContainer, Heading, Section, SubHeading } from './components/styles/App.styled';
 import { EmptyContactsMessage } from './components/EmptyContactsMessage';
 
-class App extends Component {
+export class App extends Component {
   state = {
     contacts: [],
     filter: '',
@@ -96,5 +96,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
