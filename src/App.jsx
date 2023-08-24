@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GlobalStyle } from './components/styles/GlobalStyle';
 import { Layout } from './components/styles/Layout';
 import toast, { Toaster } from 'react-hot-toast';
@@ -10,89 +10,81 @@ import { Filter } from './components/Filter';
 import { PageContainer, Heading, Section, SubHeading } from './components/styles/App.styled';
 import { EmptyContactsMessage } from './components/EmptyContactsMessage';
 
-export class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-    isEmptyContacts: false,
-  };
+export const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
+  const [isEmptyContacts, setIsEmptyContacts] = useState(false);
 
-  componentDidMount() {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      this.setState({ contacts: JSON.parse(savedContacts) });
+  useEffect(() => {
+    try {
+      const savedContacts = localStorage.getItem('contacts');
+      const parsedContacts = JSON.parse(savedContacts) || [];
+      setContacts(parsedContacts);
+    } catch (error) {
+      console.log(error);
     }
-  }
+  }, []);
 
-  componentDidUpdate(_, prevState) {
-    const { contacts, isEmptyContacts } = this.state;
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
 
-    if (prevState.isEmptyContacts !== isEmptyContacts) {
-      if (isEmptyContacts) {
-        toast.error('No contacts found.');
-      }
-    }
-
-    if (prevState.contacts !== contacts) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }
-
-  addContact = (name, number) => {
-    const newContact = {
-      id: nanoid(),
-      name,
-      number,
-      isDeleted: false,
-    };
-    this.setState(prevState => ({ contacts: [...prevState.contacts, newContact] }));
-  };
-
-  deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.map(contact =>
-        contact.id === id ? { ...contact, isDeleted: true } : contact
-      ),
-    }));
-  }
-
-  handleFilterChange = e => {
-    const filterValue = e.target.value;
-    this.setState({ filter: filterValue });
-
-    const activeContacts = this.state.contacts.filter(contact => !contact.isDeleted);
-    const filteredContacts = activeContacts.filter(contact =>
-      contact.name.toLowerCase().includes(filterValue.toLowerCase())
-    );
-
-    this.setState({ isEmptyContacts: filteredContacts.length === 0 });
-  };
-
-  render() {
-    const { contacts, filter, isEmptyContacts } = this.state;
     const activeContacts = contacts.filter(contact => !contact.isDeleted);
     const filteredContacts = activeContacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
 
-    return (
-      <PageContainer>
-        <GlobalStyle />
-        <Layout>
-          <Heading>Phonebook</Heading>
-          <ContactForm onSubmit={this.addContact} />
-          <Section>
-            <SubHeading>Contacts</SubHeading>
-            <Filter value={filter} onChange={this.handleFilterChange} />
-            {isEmptyContacts ? (
-              <EmptyContactsMessage />
-            ) : (
-              <ContactList contacts={filteredContacts} onDeleteContact={this.deleteContact} />
-            )}
-          </Section>
-        </Layout>
-        <Toaster position="top-right" />
-      </PageContainer>
+    setIsEmptyContacts(filteredContacts.length === 0);
+
+    if (isEmptyContacts) {
+      toast.error('No contacts found.');
+    }
+  }, [contacts, filter, isEmptyContacts]);
+
+  const addContact = (name, number) => {
+    const newContact = {
+      id: nanoid(),
+      name: name.trim(),
+      number: number.trim(),
+      isDeleted: false,
+    };
+    setContacts(prevContacts => [...prevContacts, newContact]);
+  };
+
+  const deleteContact = id => {
+    setContacts(prevContacts =>
+      prevContacts.map(contact =>
+        contact.id === id ? { ...contact, isDeleted: true } : contact
+      )
     );
-  }
-}
+  };
+
+  const handleFilterChange = e => {
+    const filterValue = e.target.value;
+    setFilter(filterValue);
+  };
+
+  const activeContacts = contacts.filter(contact => !contact.isDeleted);
+  const filteredContacts = activeContacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  return (
+    <PageContainer>
+      <GlobalStyle />
+      <Layout>
+        <Heading>Phonebook</Heading>
+        <ContactForm onSubmit={addContact} />
+        <Section>
+          <SubHeading>Contacts</SubHeading>
+          <Filter value={filter} onChange={handleFilterChange} />
+          {isEmptyContacts ? (
+            <EmptyContactsMessage />
+          ) : (
+            <ContactList contacts={filteredContacts} onDeleteContact={deleteContact} />
+          )}
+        </Section>
+      </Layout>
+      <Toaster position="top-right" />
+    </PageContainer>
+  );
+};
