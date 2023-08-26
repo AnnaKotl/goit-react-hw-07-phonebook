@@ -20,11 +20,11 @@ export const Heading = styled.h1`
 export const Section = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   padding: 0 40px;
   max-width: 900px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 10px;
 `;
 
 export const SubHeading = styled.h2`
