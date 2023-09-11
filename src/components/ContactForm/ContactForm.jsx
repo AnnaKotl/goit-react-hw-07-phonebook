@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { Form, Label, Input, Button, ErrorText } from './styles/ContactForm.styled';
+import { Form, Label, Input, Button, ErrorText } from './ContactForm.styled';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, Button } from './styles/ContactList.styled';
+import { List, ListItem, Button } from './ContactList.styled';
 
 export const ContactList = ({ contacts, onDeleteContact }) => (
   <List>

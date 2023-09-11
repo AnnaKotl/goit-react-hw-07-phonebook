@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { GlobalStyle } from './components/styles/GlobalStyle';
-import { Layout } from './components/styles/Layout';
+import { GlobalStyle } from './styles/GlobalStyle';
+import { Layout } from './styles/Layout';
 import toast, { Toaster } from 'react-hot-toast';
 import { nanoid } from 'nanoid';
 
-import { ContactForm } from './components/ContactForm';
-import { ContactList } from './components/ContactList';
-import { Filter } from './components/Filter';
-import { PageContainer, Heading, Section, SubHeading } from './components/styles/App.styled';
-import { EmptyContactsMessage } from './components/EmptyContactsMessage';
+import { ContactForm } from './components/ContactForm/ContactForm';
+import { ContactList } from './components/ContactList/ContactList';
+import { Filter } from './components/Filter/Filter';
+import { PageContainer, Heading, Section, SubHeading } from './styles/App.styled';
+import { EmptyContactsMessage } from './components/EmptyContactsMessage/EmptyContactsMessage';
 
 export class App extends Component {
   state = {

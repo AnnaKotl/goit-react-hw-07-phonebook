@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterInput } from './styles/Filter.styled';
+import { FilterInput } from './Filter.styled';
 
 export const Filter = ({ value, onChange }) => (
   <FilterInput

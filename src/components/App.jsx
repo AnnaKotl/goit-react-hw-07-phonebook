@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { GlobalStyle } from './components/styles/GlobalStyle';
-import { Layout } from './components/styles/Layout';
+import { GlobalStyle } from '../styles/GlobalStyle';
+import { Layout } from '../styles/Layout';
 import { Toaster } from 'react-hot-toast';
 import { nanoid } from 'nanoid';
 
-import { ContactForm } from './components/ContactForm';
-import { ContactList } from './components/ContactList';
-import { Filter } from './components/Filter';
-import { PageContainer, Heading, Section, SubHeading } from './components/styles/App.styled';
-import { EmptyContactsMessage } from './components/EmptyContactsMessage';
+import { ContactForm } from './ContactForm/ContactForm';
+import { ContactList } from './ContactList/ContactList';
+import { Filter } from './Filter/Filter';
+import { PageContainer, Heading, Section, SubHeading } from '../styles/App.styled';
+import { EmptyContactsMessage } from './EmptyContactsMessage/EmptyContactsMessage';
 
 export const App = () => {
   const [contacts, setContacts] = useState(() => {
