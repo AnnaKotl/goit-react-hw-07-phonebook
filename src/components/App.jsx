@@ -1,57 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact, deleteContact } from './redux/contactsSlice';
+import { setFilter } from './redux/filterSlice';
+
 import { GlobalStyle } from '../styles/GlobalStyle';
 import { Layout } from '../styles/Layout';
-import { Toaster } from 'react-hot-toast';
-import { nanoid } from 'nanoid';
+import toast, { Toaster } from 'react-hot-toast';
 
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
-import { PageContainer, Heading, Section, SubHeading } from '../styles/App.styled';
 import { EmptyContactsMessage } from './EmptyContactsMessage/EmptyContactsMessage';
+import {
+  PageContainer,
+  Heading,
+  Section,
+  SubHeading,
+} from '../styles/App.styled';
+
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    return savedContacts ? JSON.parse(savedContacts) : [];
-  });
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
+  const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState('');
-  const [isEmptyContacts, setIsEmptyContacts] = useState(false);
+  const handleFilterChange = e => {
+    const filterValue = e.target.value;
+    dispatch(setFilter(filterValue));
+  };
 
-  useEffect(() => {
+  const isContactExists = (contacts, number) => {
+    return contacts.some(contact => contact.number === number);
+  };
+
+  const saveContacts = (contacts) => {
+    // localStorage
     localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  };
 
-  useEffect(() => {
-    const activeContacts = contacts.filter(contact => !contact.isDeleted);
-    const filteredContacts = activeContacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
+  const handleAddContact = (name, number) => {
+    if (isContactExists(contacts, number)) {
+      toast.error('A contact with such a number already exists.');
+      return;
+    }
 
-    setIsEmptyContacts(filteredContacts.length === 0);
-  }, [contacts, filter]);
-
-  const addContact = (name, number) => {
     const newContact = {
-      id: nanoid(),
       name,
       number,
-      isDeleted: false,
     };
-    setContacts(prevContacts => [...prevContacts, newContact]);
+    dispatch(addContact(newContact));
+
+    // після додавання контакту в Redux - зберігаємо контакти в localStorage.
+    saveContacts(contacts);
   };
 
-  const deleteContact = id => {
-    setContacts(prevContacts =>
-      prevContacts.map(contact =>
-        contact.id === id ? { ...contact, isDeleted: true } : contact
-      )
-    );
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
+    // після видалення контакту з Redux - зберігаємо контакти в localStorage.
+    saveContacts(contacts);
   };
 
-  const filteredContacts = contacts.filter(contact =>
-    !contact.isDeleted && contact.name.toLowerCase().includes(filter.toLowerCase())
+  const filteredContacts = contacts.filter(
+    contact =>
+      !contact.isDeleted &&
+      contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
@@ -59,14 +71,17 @@ export const App = () => {
       <GlobalStyle />
       <Layout>
         <Heading>Phonebook</Heading>
-        <ContactForm onSubmit={addContact} />
+        <ContactForm onSubmit={handleAddContact} />
         <Section>
           <SubHeading>Contacts</SubHeading>
-          <Filter value={filter} onChange={e => setFilter(e.target.value)} />
-          {isEmptyContacts ? (
+          <Filter value={filter} onChange={handleFilterChange} />
+          {filteredContacts.length === 0 ? (
             <EmptyContactsMessage />
           ) : (
-            <ContactList contacts={filteredContacts} onDeleteContact={deleteContact} />
+            <ContactList
+              contacts={filteredContacts}
+              onDeleteContact={handleDeleteContact}
+            />
           )}
         </Section>
       </Layout>
