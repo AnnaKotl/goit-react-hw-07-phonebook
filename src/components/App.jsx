@@ -1,22 +1,32 @@
 import React, { useEffect } from 'react';
+import { nanoid } from 'nanoid';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFilter } from './redux/filterSlice';
-import { setIsEmptyContacts } from './redux/isEmptyContactsSlice';
-import { addContact, deleteContact } from './redux/contactsSlice';
+import {
+  setFilter,
+  setIsEmptyContacts,
+  addContact,
+  deleteContact,
+} from './redux/actions';
+
 import { GlobalStyle } from '../styles/GlobalStyle';
 import { Layout } from '../styles/Layout';
-import { Toaster } from 'react-hot-toast';
-
+import toast, { Toaster } from 'react-hot-toast';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
+import {
+  PageContainer,
+  Heading,
+  Section,
+  SubHeading,
+} from '../styles/App.styled';
 import { EmptyContactsMessage } from './EmptyContactsMessage/EmptyContactsMessage';
-import { PageContainer, Heading, Section, SubHeading } from '../styles/App.styled';
+
+
 
 export const App = () => {
   const contacts = useSelector(state => state.contacts);
   const filter = useSelector(state => state.filter);
-  const isEmptyContacts = useSelector(state => state.isEmptyContacts);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,19 +51,23 @@ export const App = () => {
     const newContact = {
       name,
       number,
+      id: nanoid(),
     };
     dispatch(addContact(newContact));
+    toast.success('Contact added successfully!');
   };
 
   const handleDeleteContact = id => {
     dispatch(deleteContact(id));
   };
 
-  const filteredContacts = contacts.filter(contact =>
-    !contact.isDeleted && contact.name.toLowerCase().includes(filter.toLowerCase())
+  const filteredContacts = contacts.filter(
+    contact =>
+      !contact.isDeleted &&
+      contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-   return (
+  return (
     <PageContainer>
       <GlobalStyle />
       <Layout>
@@ -62,12 +76,12 @@ export const App = () => {
         <Section>
           <SubHeading>Contacts</SubHeading>
           <Filter value={filter} onChange={handleFilterChange} />
-            {filteredContacts.length === 0 ? (
+          {filteredContacts.length === 0 ? (
             <EmptyContactsMessage />
-            ) : (
+          ) : (
             <ContactList
-                contacts={filteredContacts}
-                onDeleteContact={handleDeleteContact}
+              contacts={filteredContacts}
+              onDeleteContact={handleDeleteContact}
             />
           )}
         </Section>
