@@ -11,18 +11,16 @@ const contactsSlice = createSlice({
         ...action.payload,
         isDeleted: false,
       };
-      return [...state, newContact];
+      state.push(newContact);
     },
     deleteContact: (state, action) => {
-      return state.map(contact =>
-        contact.id === action.payload ? { ...contact, isDeleted: true } : contact
-      );
+      const index = state.findIndex(contact => contact.id === action.payload);
+      if (index !== -1) {
+        state[index].isDeleted = true;
+      }
     },
   },
 });
 
 export const { addContact, deleteContact } = contactsSlice.actions;
 export default contactsSlice.reducer;
-
-
-// export const App =() => ({

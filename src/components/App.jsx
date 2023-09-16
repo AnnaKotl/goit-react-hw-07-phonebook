@@ -1,28 +1,26 @@
 import React, { useEffect } from 'react';
-import { nanoid } from 'nanoid';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  setFilter,
-  setIsEmptyContacts,
-  addContact,
-  deleteContact,
-} from './redux/actions';
-
-import { GlobalStyle } from '../styles/GlobalStyle';
-import { Layout } from '../styles/Layout';
 import toast, { Toaster } from 'react-hot-toast';
+import { nanoid } from 'nanoid';
+
+import { addContact, deleteContact } from './redux/contactsSlice';
+import { setFilter } from './redux/filterSlice';
+
+import { setIsEmptyContacts } from './redux/isEmptyContactsSlice';
+
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
+import { EmptyContactsMessage } from './EmptyContactsMessage/EmptyContactsMessage';
+
+import { GlobalStyle } from '../styles/GlobalStyle';
+import { Layout } from '../styles/Layout';
 import {
   PageContainer,
   Heading,
   Section,
   SubHeading,
 } from '../styles/App.styled';
-import { EmptyContactsMessage } from './EmptyContactsMessage/EmptyContactsMessage';
-
-
 
 export const App = () => {
   const contacts = useSelector(state => state.contacts);
