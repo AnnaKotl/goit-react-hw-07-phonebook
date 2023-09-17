@@ -12,19 +12,22 @@ export const ContactList = () => {
     dispatch(deleteContact(id));
   };
 
-const filteredContacts = contacts.filter(contact => !contact.isDeleted);
+  const filteredContacts = contacts.filter(contact => !contact.isDeleted);
 
-return (
-  <List>
-    {filteredContacts.map(contact => (
-      <ListItem key={contact.id}>
-        <p>{contact.name}: {contact.number}</p>
-        <Button onClick={() => handleDeleteContact(contact.id)}>Delete</Button>
-      </ListItem>
-    ))}
-  </List>
-);
-
+  return (
+    <List>
+      {filteredContacts.map(contact => (
+        <ListItem key={contact.id}>
+          <p>
+            {contact.name}: {contact.number}
+          </p>
+          <Button onClick={() => handleDeleteContact(contact.id)}>
+            Delete
+          </Button>
+        </ListItem>
+      ))}
+    </List>
+  );
 };
 
 // import React from 'react';

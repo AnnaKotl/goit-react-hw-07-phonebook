@@ -53,12 +53,12 @@ export const App = () => {
     };
     dispatch(addContact(newContact));
     toast.success('Contact added successfully!');
-    console.log('Contacts after adding:', contacts);
+    // console.log('Contacts after adding:', contacts);
   };
 
   const handleDeleteContact = (id) => {
     dispatch(deleteContact(id));
-    console.log('Contacts after deleting:', contacts);
+    // console.log('Contacts after deleting:', contacts);
   };
 
   const filteredContacts = contacts.filter(
