@@ -8,15 +8,16 @@ const contactsSlice = createSlice({
     addContact: (state, action) => {
       const newContact = {
         id: nanoid(),
-        ...action.payload,
+        name: action.payload.name,
+        number: action.payload.number,
         isDeleted: false,
       };
       state.push(newContact);
     },
     deleteContact: (state, action) => {
-      const index = state.findIndex(contact => contact.id === action.payload);
-      if (index !== -1) {
-        state[index].isDeleted = true;
+      const contact = state.find((contact) => contact.id === action.payload);
+      if (contact) {
+        contact.isDeleted = true;
       }
     },
   },

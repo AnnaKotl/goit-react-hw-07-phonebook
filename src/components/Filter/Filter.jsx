@@ -4,17 +4,18 @@ import { setFilter } from 'components/redux/filterSlice';
 import { FilterInput } from './Filter.styled';
 
 export const Filter = () => {
-  const filter = useSelector(state => state.filter);
+  const currentFilter = useSelector(state => state.filter);
   const dispatch = useDispatch();
 
   const handleFilterChange = e => {
-    dispatch(setFilter(e.target.value));
+    const filterValue = e.target.value;
+    dispatch(setFilter(filterValue));
   };
 
   return (
     <FilterInput
       type="text"
-      value={filter}
+      value={currentFilter}
       onChange={handleFilterChange}
       placeholder="Filter contacts by name"
     />

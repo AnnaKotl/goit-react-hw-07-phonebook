@@ -5,7 +5,6 @@ import { nanoid } from 'nanoid';
 
 import { addContact, deleteContact } from './redux/contactsSlice';
 import { setFilter } from './redux/filterSlice';
-
 import { setIsEmptyContacts } from './redux/isEmptyContactsSlice';
 
 import { ContactForm } from './ContactForm/ContactForm';
@@ -50,13 +49,16 @@ export const App = () => {
       name,
       number,
       id: nanoid(),
+      isDeleted: false,
     };
     dispatch(addContact(newContact));
     toast.success('Contact added successfully!');
+    console.log('Contacts after adding:', contacts);
   };
 
-  const handleDeleteContact = id => {
+  const handleDeleteContact = (id) => {
     dispatch(deleteContact(id));
+    console.log('Contacts after deleting:', contacts);
   };
 
   const filteredContacts = contacts.filter(
@@ -64,6 +66,7 @@ export const App = () => {
       !contact.isDeleted &&
       contact.name.toLowerCase().includes(filter.toLowerCase())
   );
+
 
   return (
     <PageContainer>
