@@ -7,9 +7,9 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     margin: 0;
     font-family: 'Raleway', sans-serif;
-    font-size: 24px;
+    font-size: 20px;
     font-style: normal;
-    line-height: 1.5;
+    line-height: 1.1;
     color: #2e2304;
     background: #ffd83b;
 }
