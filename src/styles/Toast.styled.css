@@ -1,0 +1,38 @@
+/* Стилі для повідомлення успіху */
+.Toastify__toast--success {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Стилі для повідомлення про помилку */
+.Toastify__toast--error {
+  background-color: #ff5733;
+  color: white;
+}
+
+/* Стилі для повідомлення */
+.Toastify__toast {
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* import {
+  toast
+}
+
+from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Підключення стандартних стилів
+import './---.css'; 
+
+/* const handleSuccess=()=> {
+  toast.success("Success message");
+}
+
+;
+
+const handleError=()=> {
+  toast.error("Error message");
+}
+
+; */

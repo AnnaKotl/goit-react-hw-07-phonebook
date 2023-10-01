@@ -1,12 +1,12 @@
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from 'Redux/selectors';
 import { addContact } from 'services/API';
 
-import { FormStyled, Button, InputStyled } from './ContactForm.styled';
+import { FormStyled, Button, InputStyled, Title } from './ContactForm.styled';
 
 const initialValues = {
   name: '',
@@ -15,27 +15,26 @@ const initialValues = {
 
 const schema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/)
-    .required('Required!')
-    .min(3, 'Too Short!')
-    .max(20, 'Too Long!'),
-  number: Yup.string()
     .matches(
-      /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/
+      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
+      'Name may contain only letters, apostrophe, dash and spaces'
     )
-    .required('Required!')
-    .min(4, 'Too Short!')
-    .max(20, 'Too Long!'),
+    .required('Name is required'),
+  number: Yup.string()
+    .matches(/^(?:\+380|0)[0-9]{9}$/, 'Invalid number format (e.g. +380XXXXXXXXX or 0XXXXXXXXX)')
+    .required('Number is required'),
 });
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
 
-  const handleAddContact = async (values) => {
+  const handleAddContact = async values => {
     try {
       schema.validateSync(values, { abortEarly: false }); // Перевірка схеми
-      const existingContact = contacts.find(contact => contact.name.toLowerCase() === values.name.toLowerCase());
+      const existingContact = contacts.find(
+        contact => contact.name.toLowerCase() === values.name.toLowerCase()
+      );
 
       if (existingContact) {
         toast.error(`${values.name} has already been added to contacts!`);
@@ -46,7 +45,7 @@ export const ContactForm = () => {
       }
     } catch (error) {
       error.inner.forEach(err => {
-        toast.error(err.message);
+        toast.error('Please fill in all fields correctly');
       });
     }
   };
@@ -58,6 +57,7 @@ export const ContactForm = () => {
       onSubmit={handleAddContact}
     >
       <FormStyled>
+        <Title>Create a new contact:</Title>
         <label>
           Name
           <Field
