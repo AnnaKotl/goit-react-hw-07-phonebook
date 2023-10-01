@@ -47,7 +47,7 @@ export const InputStyled = styled.input`
   }
 `;
 
-export const Button = styled.button`
+export const ButtonSub = styled.button`
   padding: 10px;
   font-size: 16px;
   background-color: #4caf50;

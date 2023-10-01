@@ -1,29 +1,24 @@
+import React from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { nanoid } from 'nanoid';
 import { Formik, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from 'Redux/selectors';
 import { addContact } from 'services/API';
-
-import { FormStyled, Button, InputStyled, Title } from './ContactForm.styled';
+import { schema } from 'services/Yup';
+import {
+  FormStyled,
+  ButtonSub,
+  InputStyled,
+  Title,
+} from './ContactForm.styled';
+import { ErrorMessageComponent } from 'services/ErrorMessageComponent';
 
 const initialValues = {
   name: '',
   number: '',
 };
-
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .matches(
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      'Name may contain only letters, apostrophe, dash and spaces'
-    )
-    .required('Name is required'),
-  number: Yup.string()
-    .matches(/^(?:\+380|0)[0-9]{9}$/, 'Invalid number format (e.g. +380XXXXXXXXX or 0XXXXXXXXX)')
-    .required('Number is required'),
-});
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
@@ -31,7 +26,13 @@ export const ContactForm = () => {
 
   const handleAddContact = async values => {
     try {
-      schema.validateSync(values, { abortEarly: false }); // Перевірка схеми
+      console.log('Submitting form with values:', values); // Додайте цей рядок
+
+      if (!values.name || !values.number) {
+        toast.error('Both Name and Number are required.');
+        return;
+      }
+
       const existingContact = contacts.find(
         contact => contact.name.toLowerCase() === values.name.toLowerCase()
       );
@@ -39,14 +40,15 @@ export const ContactForm = () => {
       if (existingContact) {
         toast.error(`${values.name} has already been added to contacts!`);
       } else {
-        const item = { name: values.name, phone: values.number };
+        const id = nanoid();
+        const item = { id, name: values.name, phone: values.number };
+        console.log('Adding contact:', item); // Додайте цей рядок
         await dispatch(addContact(item));
         toast.success(`${values.name} added to contacts!`);
       }
     } catch (error) {
-      error.inner.forEach(err => {
-        toast.error('Please fill in all fields correctly');
-      });
+      console.error('An error occurred while adding the contact:', error); // Додайте цей рядок
+      toast.error('An error occurred while adding the contact.');
     }
   };
 
@@ -54,7 +56,10 @@ export const ContactForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={schema}
-      onSubmit={handleAddContact}
+      onSubmit={(values, { setSubmitting }) => {
+        handleAddContact(values);
+        setSubmitting(false);
+      }}
     >
       <FormStyled>
         <Title>Create a new contact:</Title>
@@ -76,9 +81,9 @@ export const ContactForm = () => {
             placeholder="Enter number"
             component={InputStyled}
           />
-          <ErrorMessage name="number" component="div" className="error" />
+          <ErrorMessageComponent error={<ErrorMessage name="number" />} />
         </label>
-        <Button type="submit">Add</Button>
+        <ButtonSub type="submit">Add</ButtonSub>
       </FormStyled>
     </Formik>
   );

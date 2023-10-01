@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { findContacts } from '../../Redux/FilterSlice';
+import { findContacts } from 'Redux/FilterSlice';
 import { FilterInput, ContainerFilter, TitleFilter } from "./Filter.styled";
 
 export const Filter = () => {
@@ -7,11 +7,11 @@ export const Filter = () => {
 
   return (
     <ContainerFilter>
-      <TitleFilter>Search contacts by name:</TitleFilter>
+      <TitleFilter>Enter a name to search:</TitleFilter>
       <FilterInput
         type="text"
         name="filter"
-        placeholder="enter search name"
+        placeholder="Enter search name"
         value={useSelector(state => state.filter.filterValue)}
         onChange={e => {
           dispatch(findContacts(e.target.value));

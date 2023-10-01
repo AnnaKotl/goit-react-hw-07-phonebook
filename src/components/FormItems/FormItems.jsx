@@ -11,7 +11,6 @@ export const FormItems = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
-
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
 
@@ -19,23 +18,26 @@ export const FormItems = () => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
+  const filteredContacts = filter.length > 0
+    ? contacts.filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
+    : contacts;
+
   return (
     <ContainerItems>
-      <Filter/>
+      <Filter />
       {isLoading && !error && <b>Request in progress...</b>}
       {error && <b>Error: {error}</b>}
-      {contacts?.length > 0 && (
+      {filteredContacts.length > 0 ? (
         <ul>
-          {(filter.length > 0
-              ? contacts.filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
-              : contacts
-            ).map(item =>( 
+          {filteredContacts.map(item => (
             <Item key={item.id}>
               {item.name}: {item.phone}
               <ButtonDel onClick={() => dispatch(deleteContact(item.id))}>Delete</ButtonDel>
             </Item>
           ))}
         </ul>
+      ) : (
+        <b>No contacts found.</b>
       )}
     </ContainerItems>
   );
