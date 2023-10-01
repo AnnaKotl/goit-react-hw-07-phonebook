@@ -1,8 +1,14 @@
 import * as Yup from 'yup';
 
 export const schema = Yup.object().shape({
-  name: Yup.string().min(3, 'Too Short!').required('A Name is required'),
+  name: Yup.string()
+    .matches(/^[a-zA-Zа-яА-Я ':-]+$/)
+    .required('Required!')
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!'),
   number: Yup.string()
-    .matches(/^0[0-9]{9}$/, 'Invalid number format (e.g., 0XXXXXXXXX)')
-    .required('A phone number is required'),
+    .matches(/\+?\d{1,4}[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/)
+    .required('Required!')
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!'),
 });

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { addContact, deleteContact, fetchContacts } from '../services/API';
-import { nanoid } from 'nanoid';
+
 const handlePending = state => {
   state.isLoading = true;
 };
@@ -29,18 +29,14 @@ export const contactsSlice = createSlice({
     [addContact.fulfilled](state, action) {
       state.isLoading = false;
       state.error = null;
-      const newContact = { ...action.payload, id: nanoid() };
-      state.contacts.push(newContact);
+      state.contacts.push(action.payload);
     },
-
     [addContact.rejected]: handleRejected,
     [deleteContact.pending]: handlePending,
     [deleteContact.fulfilled](state, action) {
       state.isLoading = false;
       state.error = null;
-      const index = state.contacts.findIndex(
-        item => item.id === action.payload.id
-      );
+      const index = state.contacts.findIndex(item => item.id === action.payload.id);
       state.contacts.splice(index, 1);
     },
     [deleteContact.rejected]: handleRejected,

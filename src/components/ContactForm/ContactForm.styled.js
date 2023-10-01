@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { Form } from 'formik';
+import { Form, ErrorMessage } from 'formik';
 
 export const Title = styled.h1`
   font-size: 32px;
@@ -24,7 +24,9 @@ export const FormStyled = styled(Form)`
 
 export const InputStyled = styled.input`
   display: flex;
+  align-items: center;
   justify-content: center;
+  text-align: center;
   padding: 10px;
   margin-top: 10px;
   font-size: 16px;
@@ -75,4 +77,27 @@ export const ButtonSub = styled.button`
   &:active {
     transform: scale(0.95);
   }
+`;
+
+export const StyledError = styled(ErrorMessage)`
+display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  margin: 4px auto 0;
+  max-width: 240px;
+`;
+
+export const ErrorText = styled.div`
+display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin: 4px auto 0;
+  padding: 2px;
+  color: red;
+  font-size: 12px;
+  font-weight: bold;
+  max-width: 240px;
 `;
