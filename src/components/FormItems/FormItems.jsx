@@ -1,9 +1,11 @@
 import React from 'react';
-import { Filter } from '../Filter/Filter';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { deleteContact, fetchContacts } from 'services/API';
 import { selectContacts, selectError, selectIsLoading, selectFilter } from 'Redux/selectors';
+
+import { Filter } from '../Filter/Filter';
+import { ContainerItems, ButtonDel, Item } from './FormItems.styled';
 
 export const FormItems = () => {
   const dispatch = useDispatch();
@@ -18,7 +20,7 @@ export const FormItems = () => {
   }, [dispatch]);
 
   return (
-    <div>
+    <ContainerItems>
       <Filter/>
       {isLoading && !error && <b>Request in progress...</b>}
       {error && <b>Error: {error}</b>}
@@ -28,13 +30,13 @@ export const FormItems = () => {
               ? contacts.filter(item => item.name.toLowerCase().includes(filter.toLowerCase()))
               : contacts
             ).map(item =>( 
-            <li key={item.id}>
+            <Item key={item.id}>
               {item.name}: {item.phone}
-              <button onClick={() => dispatch(deleteContact(item.id))}>Delete</button>
-            </li>
+              <ButtonDel onClick={() => dispatch(deleteContact(item.id))}>Delete</ButtonDel>
+            </Item>
           ))}
         </ul>
       )}
-    </div>
+    </ContainerItems>
   );
 };

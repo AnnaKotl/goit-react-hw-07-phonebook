@@ -15,6 +15,7 @@ export const FormStyled = styled(Form)`
   gap: 20px;
   padding: 20px;
   margin-bottom: 40px;
+  background-color: #f2d044;
 
   /* border: 1px solid rgba(64, 52, 6, 0.1); */
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
