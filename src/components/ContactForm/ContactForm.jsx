@@ -1,16 +1,17 @@
 import React from 'react';
-import { Formik, Field, ErrorMessage } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
+
 import { selectContacts } from 'Redux/selectors';
 import { addContact } from 'services/API';
-import { schema } from 'services/Yup';
 import {
   FormStyled,
   ButtonSub,
-  InputStyled,
   Title,
   StyledError,
   ErrorText,
+  StyledField
 } from './ContactForm.styled';
 
 const initialValues = {
@@ -18,18 +19,26 @@ const initialValues = {
   number: '',
 };
 
+const schema = Yup.object().shape({
+  name: Yup.string()
+    .matches(
+      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
+      'Name may contain only letters, apostrophe, dash and spaces'
+    )
+    .required('Name is required'),
+  number: Yup.string()
+    .matches(/^(?:\+380|0)[0-9]{9}$/, 'Invalid number format (e.g. +380XXXXXXXXX or 0XXXXXXXXX)')
+    .required('Number is required'),
+});
+
 export const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
 
   const handleOnSubmit = (values, actions) => {
-    if (
-      contacts.find(
-        contact => contact.name.toLowerCase() === values.name.toLowerCase()
-      ) === undefined
-    ) {
+    if (contacts.find(contact => contact.name.toLowerCase() === values.name.toLowerCase()) === undefined) {
       const item = { name: values.name, phone: values.number };
-      dispatch(addContact(item));
+      dispatch(addContact(item)); 
       actions.resetForm();
     } else {
       alert(`${values.name} is already in contacts.`);
@@ -47,11 +56,8 @@ export const ContactForm = () => {
           <Title>Create a new contact:</Title>
           <label>
             Name
-            <Field
-              type="text"
-              name="name"
+            <StyledField name="name"
               placeholder="Enter name"
-              component={InputStyled}
             />
             <StyledError name="name" component="div" />
             <ErrorMessage name="name">
@@ -65,17 +71,14 @@ export const ContactForm = () => {
           </label>
           <label>
             Number
-            <Field
-              type="text"
-              name="number"
+            <StyledField name="number"
               placeholder="Enter number"
-              component={InputStyled}
             />
             <StyledError name="number" component="div" />
             <ErrorMessage name="number">
               {() => (
                 <ErrorText>
-                  Phone number must start with +
+                  Phone number must be +380XXXXXXXXX or 0XXXXXXXXX
                 </ErrorText>
               )}
             </ErrorMessage>
